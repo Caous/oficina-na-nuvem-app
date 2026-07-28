@@ -5,11 +5,14 @@ import '../../features/customers/models/vehicle.dart';
 import '../../features/customers/presentation/pages/vehicle_form_page.dart';
 import '../../features/dashboard/presentation/pages/dashboard_page.dart';
 import '../../features/employees/presentation/pages/employees_page.dart';
+import '../../features/inventory/presentation/pages/inventory_page.dart';
+import '../../features/inventory/presentation/pages/product_form_page.dart';
 import '../../features/service_catalog/models/workshop_service.dart';
 import '../../features/service_catalog/presentation/pages/service_categories_page.dart';
 import '../../features/service_catalog/presentation/pages/service_form_page.dart';
 import '../../features/service_catalog/presentation/pages/services_page.dart';
 import '../../features/service_orders/models/service_order.dart';
+import '../../shared/products/models/product.dart';
 import '../../features/service_orders/presentation/pages/service_order_detail_page.dart';
 import '../../features/service_orders/presentation/pages/service_order_form_page.dart';
 import '../../features/service_orders/presentation/pages/service_orders_page.dart';
@@ -92,6 +95,16 @@ class _WorkshopShellState extends State<WorkshopShell> {
     return created;
   }
 
+  Future<bool?> _openProductForm(Product? product) {
+    return Navigator.of(context).push<bool>(
+      MaterialPageRoute<bool>(
+        builder: (_) => ProductFormPage(
+          viewModel: _dependencies.createProductFormViewModel(product),
+        ),
+      ),
+    );
+  }
+
   Future<bool?> _openServiceForm(WorkshopService? service) {
     return Navigator.of(context).push<bool>(
       MaterialPageRoute<bool>(
@@ -127,6 +140,10 @@ class _WorkshopShellState extends State<WorkshopShell> {
         viewModel: _dependencies.servicesViewModel,
         onOpenCategories: _openCategories,
         onOpenServiceForm: _openServiceForm,
+      ),
+      ShopTab.inventory => InventoryPage(
+        viewModel: _dependencies.inventoryViewModel,
+        onOpenProductForm: _openProductForm,
       ),
       ShopTab.team => EmployeesPage(
         viewModel: _dependencies.employeesViewModel,

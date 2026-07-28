@@ -19,6 +19,9 @@ Duas experiências no mesmo app, decididas pelo papel da conta no login:
 - Onboarding de veículos com dados da Tabela FIPE (marca → modelo → ano
   pesquisáveis); tipos fora da FIPE (jet ski, aeronave) com preenchimento manual
 - Home com garagem, ações rápidas e status dos veículos
+- **Marketplace**: busca, filtro por categoria e ordenação; detalhe do produto
+  com seleção de quantidade; carrinho com subtotal, ajuste de itens e envio do
+  pedido à oficina
 
 ### Área da oficina
 - Cadastro com CNPJ **alfanumérico** (nova regra da Receita Federal)
@@ -27,7 +30,13 @@ Duas experiências no mesmo app, decididas pelo papel da conta no login:
   catálogo, filtros por status (em andamento, testes, aguardando aprovação,
   aprovada) e mudança de status no detalhe
 - Catálogo de serviços com categorias, preço e desconto máximo
+- **Estoque de produtos**: cadastro/edição, baixa e entrada de unidades, e uma
+  chave por item que publica (ou remove) o produto no marketplace do cliente
 - Gestão de funcionários (CRUD completo)
+
+> Estoque e marketplace compartilham o mesmo repositório: o que a oficina
+> publica aparece na loja na hora. Produto sem estoque não chega ao cliente,
+> mesmo publicado.
 
 ## Arquitetura
 
@@ -37,7 +46,8 @@ MVVM por feature, com separação estrita de camadas e SOLID:
 lib/
 ├── core/            # tema (design tokens), widgets, DI, validadores,
 │                    # máscaras, retry policy, navegação
-├── shared/          # blocos reutilizáveis entre features (ex.: endereço/CEP)
+├── shared/          # blocos usados por mais de uma área do app:
+│                    # address_lookup (CEP) e products (estoque + marketplace)
 └── features/
     └── <feature>/
         ├── models/
@@ -78,8 +88,9 @@ veículos antes de chegar à home.
 
 ```bash
 flutter analyze   # zero issues
-flutter test      # ~100 testes: unitários (validadores, retry, FIPE)
-                  # e de widget (fluxos completos de cadastro, OS, garagem)
+flutter test      # 115 testes: unitários (validadores, CNPJ alfanumérico,
+                  # retry, estoque) e de widget (cadastro, OS, garagem,
+                  # marketplace e carrinho ponta a ponta)
 ```
 
 ## Build
@@ -97,3 +108,4 @@ flutter build apk --release
 - [ ] Agendamento de serviços pelo cliente
 - [ ] Aprovação de orçamento pelo cliente no app
 - [ ] Notificações de status da OS
+- [ ] Pagamento no marketplace (hoje o pedido é combinado com a oficina)

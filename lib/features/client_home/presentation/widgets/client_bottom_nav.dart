@@ -8,6 +8,7 @@ import '../../../../core/theme/app_typography.dart';
 enum ClientTab {
   home(Icons.home_outlined, 'HOME'),
   vehicles(Icons.directions_car_outlined, 'VEÍCULOS'),
+  marketplace(Icons.shopping_bag_outlined, 'LOJA'),
   sos(Icons.phone_in_talk_outlined, 'SOCORRO'),
   profile(Icons.person_outline, 'PERFIL');
 
@@ -93,11 +94,19 @@ class _NavItem extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(tab.icon, size: 18, color: foreground),
-            const SizedBox(height: AppSpacing.xs),
-            Text(
-              tab.label,
-              style: AppTypography.navLabel.copyWith(color: foreground),
+            Icon(tab.icon, size: 17, color: foreground),
+            const SizedBox(height: 3),
+            // Com cinco abas o rótulo fica estreito: encolhe em vez de estourar.
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                tab.label,
+                maxLines: 1,
+                style: AppTypography.navLabel.copyWith(
+                  color: foreground,
+                  fontSize: 9,
+                ),
+              ),
             ),
           ],
         ),

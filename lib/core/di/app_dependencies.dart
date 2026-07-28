@@ -24,6 +24,9 @@ import '../../features/employees/data/services/mock_employee_service.dart';
 import '../../features/employees/models/employee.dart';
 import '../../features/employees/presentation/view_models/employee_form_view_model.dart';
 import '../../features/employees/presentation/view_models/employees_view_model.dart';
+import '../../features/inventory/presentation/view_models/inventory_view_model.dart';
+import '../../features/inventory/presentation/view_models/product_form_view_model.dart';
+import '../../features/marketplace/presentation/view_models/marketplace_view_model.dart';
 import '../../features/service_catalog/data/repositories/service_catalog_repository.dart';
 import '../../features/service_catalog/data/services/mock_service_catalog_service.dart';
 import '../../features/service_catalog/models/workshop_service.dart';
@@ -39,6 +42,9 @@ import '../../shared/address_lookup/presentation/address_form_controller.dart';
 import '../../shared/address_lookup/repositories/cep_repository.dart';
 import '../../shared/address_lookup/repositories/cep_repository_impl.dart';
 import '../../shared/address_lookup/services/via_cep_service.dart';
+import '../../shared/products/data/repositories/product_repository.dart';
+import '../../shared/products/data/services/mock_product_service.dart';
+import '../../shared/products/models/product.dart';
 
 /// Composition root da aplicação.
 ///
@@ -59,6 +65,7 @@ class AppDependencies {
   final ServiceOrderRepository serviceOrderRepository;
   final CepRepository cepRepository;
   final ClientGarageRepository clientGarageRepository;
+  final ProductRepository productRepository;
 
   final LoginViewModel loginViewModel;
   final AccountRegistrationViewModel accountRegistrationViewModel;
@@ -67,6 +74,7 @@ class AppDependencies {
   final ServiceCategoriesViewModel serviceCategoriesViewModel;
   final ServicesViewModel servicesViewModel;
   final ServiceOrdersViewModel serviceOrdersViewModel;
+  final InventoryViewModel inventoryViewModel;
 
   AppDependencies._({
     required this.authRepository,
@@ -78,6 +86,7 @@ class AppDependencies {
     required this.serviceOrderRepository,
     required this.cepRepository,
     required this.clientGarageRepository,
+    required this.productRepository,
     required this.loginViewModel,
     required this.accountRegistrationViewModel,
     required this.dashboardViewModel,
@@ -85,6 +94,7 @@ class AppDependencies {
     required this.serviceCategoriesViewModel,
     required this.servicesViewModel,
     required this.serviceOrdersViewModel,
+    required this.inventoryViewModel,
   });
 
   /// Monta o grafo completo com as implementações mock.
@@ -94,6 +104,10 @@ class AppDependencies {
 
     final cepRepository = CepRepositoryImpl(
       service: ViaCepService(client: http.Client()),
+    );
+
+    final productRepository = ProductRepository(
+      service: MockProductService(),
     );
 
     final clientGarageRepository = ClientGarageRepository(
@@ -141,6 +155,7 @@ class AppDependencies {
       serviceOrderRepository: serviceOrderRepository,
       cepRepository: cepRepository,
       clientGarageRepository: clientGarageRepository,
+      productRepository: productRepository,
       loginViewModel: LoginViewModel(authRepository: authRepository),
       accountRegistrationViewModel: AccountRegistrationViewModel(
         repository: accountRegistrationRepository,
@@ -156,6 +171,7 @@ class AppDependencies {
       serviceOrdersViewModel: ServiceOrdersViewModel(
         repository: serviceOrderRepository,
       ),
+      inventoryViewModel: InventoryViewModel(repository: productRepository),
     );
   }
 
@@ -171,6 +187,17 @@ class AppDependencies {
       repository: serviceCatalogRepository,
       initial: service,
     );
+  }
+
+  ProductFormViewModel createProductFormViewModel(Product? product) {
+    return ProductFormViewModel(
+      repository: productRepository,
+      initial: product,
+    );
+  }
+
+  MarketplaceViewModel createMarketplaceViewModel() {
+    return MarketplaceViewModel(repository: productRepository);
   }
 
   ClientHomeViewModel createClientHomeViewModel({required String userName}) {

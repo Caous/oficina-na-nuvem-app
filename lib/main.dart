@@ -60,6 +60,7 @@ class AppEntryPoint extends StatelessWidget {
           userName: user.name,
         ),
         vehiclesViewModel: dependencies.createClientVehiclesViewModel(),
+        marketplaceViewModel: dependencies.createMarketplaceViewModel(),
         onAddVehicle: () => _openVehicleOnboarding(shellContext),
         email: user.email,
         onLogout: () => _logout(shellContext),

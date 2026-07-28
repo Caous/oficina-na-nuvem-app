@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../../../../shared/products/models/product.dart';
+import '../../../marketplace/presentation/pages/cart_page.dart';
+import '../../../marketplace/presentation/pages/marketplace_page.dart';
+import '../../../marketplace/presentation/pages/product_detail_page.dart';
+import '../../../marketplace/presentation/view_models/marketplace_view_model.dart';
 import '../view_models/client_home_view_model.dart';
 import '../view_models/client_vehicles_view_model.dart';
 import '../widgets/client_bottom_nav.dart';
@@ -16,6 +21,9 @@ class ClientShell extends StatefulWidget {
   final ClientHomeViewModel homeViewModel;
   final ClientVehiclesViewModel vehiclesViewModel;
 
+  /// Loja de peças e acessórios.
+  final MarketplaceViewModel marketplaceViewModel;
+
   /// Abre o cadastro de um novo veículo; retorna `true` se algo foi criado.
   final Future<bool?> Function() onAddVehicle;
 
@@ -29,6 +37,7 @@ class ClientShell extends StatefulWidget {
     super.key,
     required this.homeViewModel,
     required this.vehiclesViewModel,
+    required this.marketplaceViewModel,
     required this.onAddVehicle,
     required this.email,
     required this.onLogout,
@@ -51,6 +60,26 @@ class _ClientShellState extends State<ClientShell> {
 
   void _goToVehicles() => _selectTab(ClientTab.vehicles);
 
+  void _openProductDetail(Product product) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => ProductDetailPage(
+          product: product,
+          viewModel: widget.marketplaceViewModel,
+          onOpenCart: _openCart,
+        ),
+      ),
+    );
+  }
+
+  void _openCart() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => CartPage(viewModel: widget.marketplaceViewModel),
+      ),
+    );
+  }
+
   Widget _buildCurrentPage() {
     return switch (_currentTab) {
       ClientTab.home => ClientHomePage(
@@ -60,6 +89,11 @@ class _ClientShellState extends State<ClientShell> {
       ClientTab.vehicles => ClientVehiclesPage(
         viewModel: widget.vehiclesViewModel,
         onAddVehicle: widget.onAddVehicle,
+      ),
+      ClientTab.marketplace => MarketplacePage(
+        viewModel: widget.marketplaceViewModel,
+        onOpenProduct: _openProductDetail,
+        onOpenCart: _openCart,
       ),
       ClientTab.sos => const ClientSosPage(),
       ClientTab.profile => ClientProfilePage(

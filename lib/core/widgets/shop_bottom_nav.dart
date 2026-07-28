@@ -9,6 +9,7 @@ enum ShopTab {
   dashboard(Icons.dashboard_outlined, 'INÍCIO'),
   orders(Icons.assignment_outlined, 'ORDENS'),
   services(Icons.build_outlined, 'SERVIÇOS'),
+  inventory(Icons.inventory_2_outlined, 'ESTOQUE'),
   team(Icons.people_outline, 'EQUIPE');
 
   final IconData icon;
@@ -92,11 +93,19 @@ class _NavItem extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(tab.icon, size: 18, color: foreground),
-            const SizedBox(height: AppSpacing.xs),
-            Text(
-              tab.label,
-              style: AppTypography.navLabel.copyWith(color: foreground),
+            Icon(tab.icon, size: 17, color: foreground),
+            const SizedBox(height: 3),
+            // Com cinco abas o rótulo fica estreito: encolhe em vez de estourar.
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                tab.label,
+                maxLines: 1,
+                style: AppTypography.navLabel.copyWith(
+                  color: foreground,
+                  fontSize: 9,
+                ),
+              ),
             ),
           ],
         ),
