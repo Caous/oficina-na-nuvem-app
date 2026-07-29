@@ -51,7 +51,7 @@ void main() {
   late AppDependencies dependencies;
 
   setUp(() {
-    dependencies = AppDependencies.bootstrap();
+    dependencies = AppDependencies.mocked();
   });
 
   testWidgets('dashboard renderiza indicadores e ordens recentes', (

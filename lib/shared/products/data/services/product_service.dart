@@ -4,6 +4,11 @@ import '../../models/product.dart';
 abstract class ProductService {
   Future<List<Product>> fetchAll();
 
+  /// Vitrine do cliente: publicados e com estoque, de todas as oficinas.
+  /// Separado de [fetchAll] porque o cliente não tem acesso ao estoque
+  /// privado — na API são endpoints com permissões diferentes.
+  Future<List<Product>> fetchPublished();
+
   Future<Product> create(Product product);
 
   Future<Product> update(Product product);

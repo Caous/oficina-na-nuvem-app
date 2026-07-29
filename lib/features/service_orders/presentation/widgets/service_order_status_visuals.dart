@@ -15,6 +15,8 @@ abstract final class ServiceOrderStatusVisuals {
       ServiceOrderStatus.awaitingApproval => AppColors.accentAmber,
       ServiceOrderStatus.testing => AppColors.accentPurple,
       ServiceOrderStatus.approved => AppColors.accentGreen,
+      ServiceOrderStatus.completed => AppColors.accentGreen,
+      ServiceOrderStatus.cancelled => AppColors.accentRed,
     };
   }
 
@@ -24,6 +26,8 @@ abstract final class ServiceOrderStatusVisuals {
       ServiceOrderStatus.awaitingApproval => AppColors.accentAmberLight,
       ServiceOrderStatus.testing => AppColors.accentPurpleLight,
       ServiceOrderStatus.approved => AppColors.accentGreenLight,
+      ServiceOrderStatus.completed => AppColors.accentGreenLight,
+      ServiceOrderStatus.cancelled => AppColors.accentRedLight,
     };
   }
 }

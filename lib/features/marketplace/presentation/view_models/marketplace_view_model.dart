@@ -3,15 +3,24 @@ import 'package:flutter/foundation.dart';
 import '../../../../core/state/view_state.dart';
 import '../../../../shared/products/data/repositories/product_repository.dart';
 import '../../../../shared/products/models/product.dart';
+import '../../data/services/marketplace_order_service.dart';
 import '../../models/cart_item.dart';
 
 /// Marketplace visto pelo cliente: peças e acessórios publicados pelas
 /// oficinas, filtráveis por categoria e busca, com um carrinho local simples.
 class MarketplaceViewModel extends ChangeNotifier {
   final ProductRepository _repository;
+  final MarketplaceOrderService _orderService;
 
-  MarketplaceViewModel({required ProductRepository repository})
-    : _repository = repository;
+  MarketplaceViewModel({
+    required ProductRepository repository,
+    required MarketplaceOrderService orderService,
+  }) : _repository = repository,
+       _orderService = orderService;
+
+  bool _isPlacingOrder = false;
+
+  bool get isPlacingOrder => _isPlacingOrder;
 
   ViewState<List<Product>> _state = const ViewStateLoading();
   String _searchQuery = '';
@@ -164,5 +173,31 @@ class MarketplaceViewModel extends ChangeNotifier {
   void clearCart() {
     _cart.clear();
     notifyListeners();
+  }
+
+  /// Envia o pedido à API. O carrinho só é esvaziado quando o pedido é aceito
+  /// — em falha, os itens ficam para nova tentativa. Devolve `true` no
+  /// sucesso; recarrega a vitrine porque o estoque mudou.
+  Future<bool> checkout() async {
+    if (_cart.isEmpty || _isPlacingOrder) {
+      return false;
+    }
+
+    _isPlacingOrder = true;
+    notifyListeners();
+
+    try {
+      await _orderService.placeOrder(List.unmodifiable(_cart));
+
+      _cart.clear();
+
+      await load();
+      return true;
+    } catch (_) {
+      return false;
+    } finally {
+      _isPlacingOrder = false;
+      notifyListeners();
+    }
   }
 }

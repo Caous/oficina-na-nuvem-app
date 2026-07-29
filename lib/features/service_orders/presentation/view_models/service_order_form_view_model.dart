@@ -176,18 +176,22 @@ class ServiceOrderFormViewModel extends ChangeNotifier {
         id: '',
         number: '',
         status: ServiceOrderStatus.awaitingApproval,
+        customerId: customer.id,
         customerName: customer.name,
+        vehicleId: vehicle.id,
         vehicleDescription: vehicle.shortDescription,
         summary: _selectedServices.map((service) => service.name).join(' + '),
         items: _selectedServices
             .map(
               (service) => ServiceOrderItem(
+                serviceId: service.id,
                 serviceName: service.name,
                 price: service.price,
               ),
             )
             .toList(),
         openedAt: DateTime.now(),
+        assignedEmployeeId: _selectedEmployee?.id,
         assignedEmployeeName: _selectedEmployee?.name,
       );
 

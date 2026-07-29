@@ -79,6 +79,8 @@ class AppEntryPoint extends StatelessWidget {
   }
 
   void _logout(BuildContext context) {
+    dependencies.authSession.clear();
+
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute<void>(
         builder: (_) => AppEntryPoint(dependencies: dependencies),

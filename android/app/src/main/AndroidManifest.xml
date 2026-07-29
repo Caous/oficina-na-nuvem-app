@@ -1,7 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- usesCleartextTraffic: o backend de desenvolvimento fala HTTP puro
+         (10.0.2.2:8080). Remover quando a API tiver TLS. -->
     <application
         android:label="Oficina na Nuvem"
         android:name="${applicationName}"
+        android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
