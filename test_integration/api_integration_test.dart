@@ -1,6 +1,3 @@
-@Tags(['integration'])
-library;
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:oficina_app/core/network/api_client.dart';
@@ -18,14 +15,15 @@ import 'package:oficina_app/shared/products/data/services/api_product_service.da
 
 /// Exercita os services de API contra um backend de verdade.
 ///
-/// Não roda junto com a suíte normal (tag `integration`). Com o backend no ar:
+/// Fica fora de `test/` de propósito: `flutter test` roda só o que está lá, e
+/// estes aqui precisam da API no ar. Para rodá-los, aponte o endereço:
 ///
 /// ```
-/// flutter test test/integration --tags integration \
+/// flutter test test_integration \
 ///   --dart-define=API_BASE_URL=http://localhost:8081/api
 /// ```
 ///
-/// Prova o que os testes de widget não alcançam: cabeçalhos, JSON e a
+/// Provam o que os testes de widget não alcançam: cabeçalhos, JSON e a
 /// tradução entre os nomes dos dois lados.
 void main() {
   const ownerEmail = 'contato@oficinadoze.com';

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 import 'api_config.dart';
@@ -64,9 +65,23 @@ class ApiClient {
       request.body = jsonEncode(body);
     }
 
-    final response = await http.Response.fromStream(await _http.send(request));
+    // Em debug, toda chamada aparece no console do `flutter run` — é o
+    // primeiro lugar onde se olha quando uma tela falha.
+    try {
+      final response = await http.Response.fromStream(await _http.send(request));
 
-    return _decode(response);
+      if (kDebugMode) {
+        debugPrint('[API] $method $uri → ${response.statusCode}');
+      }
+
+      return _decode(response);
+    } on Object catch (error) {
+      if (kDebugMode) {
+        debugPrint('[API] $method $uri → FALHOU: $error');
+      }
+
+      rethrow;
+    }
   }
 
   dynamic _decode(http.Response response) {
