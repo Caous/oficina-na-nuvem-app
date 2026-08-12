@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import '../../../../core/network/api_failure_message.dart';
 import '../../data/repositories/auth_repository.dart';
 import '../../models/user.dart';
 
@@ -33,8 +34,11 @@ class LoginViewModel extends ChangeNotifier {
 
       _userLogin = user;
       return true;
-    } catch (_) {
-      _errorMessage = 'Não foi possível realizar o login.';
+    } catch (error) {
+      _errorMessage = ApiFailureMessage.of(
+        error,
+        fallback: 'Não foi possível realizar o login.',
+      );
       return false;
     } finally {
       _isLoading = false;

@@ -41,7 +41,7 @@ void main() {
   late AppDependencies dependencies;
 
   setUp(() {
-    dependencies = AppDependencies.bootstrap();
+    dependencies = AppDependencies.mocked();
   });
 
   group('repositório de produtos', () {

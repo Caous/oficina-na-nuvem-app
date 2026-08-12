@@ -11,13 +11,7 @@ class ProductRepository {
   Future<List<Product>> fetchAll() => _service.fetchAll();
 
   /// Apenas o que o cliente pode ver: publicado e com estoque.
-  Future<List<Product>> fetchPublished() async {
-    final products = await _service.fetchAll();
-
-    return products
-        .where((product) => product.isVisibleOnMarketplace)
-        .toList(growable: false);
-  }
+  Future<List<Product>> fetchPublished() => _service.fetchPublished();
 
   Future<Product> create(Product product) => _service.create(product);
 

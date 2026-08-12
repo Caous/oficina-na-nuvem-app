@@ -99,6 +99,15 @@ class MockProductService implements ProductService {
   }
 
   @override
+  Future<List<Product>> fetchPublished() async {
+    await Future<void>.delayed(_latency);
+
+    return _products
+        .where((product) => product.isVisibleOnMarketplace)
+        .toList(growable: false);
+  }
+
+  @override
   Future<Product> create(Product product) async {
     await Future<void>.delayed(_latency);
 

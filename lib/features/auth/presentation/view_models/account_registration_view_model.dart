@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:oficina_app/core/network/api_failure_message.dart';
 import 'package:oficina_app/features/auth/data/repositories/account_registration_repository.dart';
 import 'package:oficina_app/features/auth/models/account_registration.dart';
 import 'package:oficina_app/shared/address_lookup/models/address.dart';
@@ -57,8 +58,8 @@ class AccountRegistrationViewModel extends ChangeNotifier {
     } on ArgumentError catch (error) {
       _errorMessage = error.message.toString();
       return false;
-    } catch (_) {
-      _errorMessage = _genericErrorMessage;
+    } catch (error) {
+      _errorMessage = ApiFailureMessage.of(error, fallback: _genericErrorMessage);
       return false;
     } finally {
       _isSubmitting = false;
@@ -94,8 +95,8 @@ class AccountRegistrationViewModel extends ChangeNotifier {
     } on ArgumentError catch (error) {
       _errorMessage = error.message.toString();
       return false;
-    } catch (_) {
-      _errorMessage = _genericErrorMessage;
+    } catch (error) {
+      _errorMessage = ApiFailureMessage.of(error, fallback: _genericErrorMessage);
       return false;
     } finally {
       _isSubmitting = false;

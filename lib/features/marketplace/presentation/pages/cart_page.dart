@@ -33,6 +33,24 @@ class CartPage extends StatelessWidget {
 
   Future<void> _checkout(BuildContext context) async {
     final total = BrlFormatter.format(viewModel.cartSubtotal);
+    final sellerName = viewModel.cartItems.first.product.sellerName;
+
+    final placed = await viewModel.checkout();
+
+    if (!context.mounted) {
+      return;
+    }
+
+    if (!placed) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Não foi possível enviar o pedido. Tente novamente.',
+          ),
+        ),
+      );
+      return;
+    }
 
     await showDialog<void>(
       context: context,
@@ -40,9 +58,8 @@ class CartPage extends StatelessWidget {
         return AlertDialog(
           title: const Text('Pedido enviado! 🎉', style: AppTypography.cardTitle),
           content: Text(
-            'A ${viewModel.cartItems.first.product.sellerName} recebeu seu '
-            'pedido de $total e vai te chamar para combinar a retirada ou '
-            'entrega.',
+            'A $sellerName recebeu seu pedido de $total e vai te chamar '
+            'para combinar a retirada ou entrega.',
             style: AppTypography.body.copyWith(height: 1.4),
           ),
           actions: [
@@ -57,8 +74,6 @@ class CartPage extends StatelessWidget {
         );
       },
     );
-
-    viewModel.clearCart();
 
     if (context.mounted) {
       Navigator.of(context).maybePop();
@@ -164,7 +179,8 @@ class CartPage extends StatelessWidget {
           SizedBox(
             height: AppSpacing.buttonHeight,
             child: FilledButton(
-              onPressed: () => _checkout(context),
+              onPressed:
+                  viewModel.isPlacingOrder ? null : () => _checkout(context),
               style: FilledButton.styleFrom(
                 backgroundColor: AppColors.accentBlue,
                 shape: RoundedRectangleBorder(
